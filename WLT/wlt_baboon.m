@@ -3,13 +3,18 @@
 clear all
 
 X = imread('Baboon.bmp');
+X = im2double(X);
 
-[CR,BPP] = wcompress('c',X,'Baboon.wtc','spiht','maxloop',12);
-Xc = wcompress('u','Baboon.wtc');
-%delete('Baboon.wtc');
-imshow(Xc);
+% Perform single-level decomposition of X using db1.
+[ca,ch,cv,cd] = dwt2(X,'haar');
 
-imwrite(Xc,'Baboon_WLTdec.bmp');
+% WLT Level-1 decompose image.
+imwrite(ca,'Baboon_ca.bmp'); % Approximation coefficients
+
+% Convert back
+X2 = idwt2(ca,ch,cv,cd,'haar');
+
+imwrite(X2,'Baboon_WLTinv.bmp');
 
 
 
